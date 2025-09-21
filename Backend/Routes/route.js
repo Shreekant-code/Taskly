@@ -34,7 +34,6 @@ router.get("/todo/:id", verifyToken, GetTodobyid);
 router.get("/todo", verifyToken, Alltodo);
 router.put("/update/:id", verifyToken, UpdateTodo);
 router.delete("/delete/:id", verifyToken, Deletebyid);
-
 router.get("/voice-created", (req, res) => {
   const { todo, name } = req.query;
 
@@ -47,6 +46,5 @@ router.get("/voice-created", (req, res) => {
     </Response>
   `);
 });
-
 
 export default router;
