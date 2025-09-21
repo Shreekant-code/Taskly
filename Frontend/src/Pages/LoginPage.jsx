@@ -40,8 +40,8 @@ export const LoginPage = () => {
 
     try {
       const url = isRegister
-        ? "http://localhost:3000/registerTodo"
-        : "http://localhost:3000/loginTodo";
+        ? "ttps://todo-app-5-inws.onrender.com/registerTodo"
+        : "ttps://todo-app-5-inws.onrender.com/loginTodo";
 
       let dataToSend;
 
