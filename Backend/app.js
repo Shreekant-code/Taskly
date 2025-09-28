@@ -2,81 +2,45 @@ import express from "express";
 import db_connect from "./Database/database.js";
 import dotenv from "dotenv";
 import router from "./Routes/route.js";
+import authrouter from "./Routes/authroute.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import multer from "multer";
-import { v4 as uuidv4 } from 'uuid';
-import { v2 as cloudinary } from 'cloudinary';
-import fs from "fs"
+import session from "express-session";
+import passport from "passport";
 
-
+// Load environment variables
 dotenv.config();
+
 const app = express();
 
-
-
+// Middleware
 app.use(cors({
-  origin: (origin, callback) => {
-    callback(null, origin); 
-  },
+  origin: (origin, callback) => callback(null, origin),
   credentials: true
 }));
-
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-cloudinary.config({
-  cloud_name:process.env.CLOUD_NAME,
-  api_key:process.env.API_KEY,
-  api_secret:process.env.API_SECRET,
-});
+// Sessions
+app.use(session({
+  secret: "supersecret",
+  resave: false,
+  saveUninitialized: true
+}));
 
+// Initialize passport
+app.use(passport.initialize());
+app.use(passport.session());
 
+// Load Passport Google OAuth strategy BEFORE mounting authrouter
+import "./Auth/Oauth.js"; 
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, './uploads')
-  },
-  filename: function (req, file, cb) {
-    console.log("insidefilename fxn",file);
-    const random=uuidv4();
-    cb(null,random+""+file.originalname)
-  }
-})
-
-const upload = multer({ storage: storage })
-
-app.post('/profile', upload.single('myfile'), async function (req, res, next) {
-  try {
-    if (!req.file) {
-      return res.status(400).send('No file uploaded');
-    }
-
-   
-
-    const result = await cloudinary.uploader.upload(req.file.path);
-    fs.unlink(req.file.path,
-    (err => {
-        if (err) console.log(err);
-        else {
-            console.log("\nDeleted file: example_file.txt");}
-    }));
-
-    res.send({
-      message: 'File uploaded successfully',
-      cloudinaryUrl: result.secure_url
-    });
-  } catch (err) {
-    console.error('Upload error:', err);
-    res.status(500).send('Upload failed');
-  }
-});
-
-
+// Mount routes
+app.use("/auth", authrouter);   // <-- must come AFTER passport strategy loaded
 app.use("/", router);
 
+// Connect DB and start server
 await db_connect();
 
 const PORT = process.env.PORT || 5000;

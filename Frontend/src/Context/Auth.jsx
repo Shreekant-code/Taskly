@@ -1,24 +1,22 @@
-// src/context/AuthContext.jsx
+
 import React, { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
 
-// --- Create Auth Context
 const AuthContext = createContext();
 
-// --- Axios instance (shared across all components)
+
 const api = axios.create({
-  baseURL: "https://todo-app-5-inws.onrender.com", // your backend URL
-  withCredentials: true, // important to send cookies (refresh token)
+  baseURL: "http://localhost:3000", 
+  withCredentials: true, 
 });
 
 export const AuthProvider = ({ children }) => {
-  const [accessToken, setAccessToken] = useState(null); // stores JWT access token
-  const [loading, setLoading] = useState(true); // tracks auth initialization
+  const [accessToken, setAccessToken] = useState(null); 
+  const [loading, setLoading] = useState(true); 
 
-  // --- Helper to update access token
   const updateToken = (token) => setAccessToken(token);
 
-  // --- Logout helper
+
   const logout = async () => {
     try {
       await api.post("/logout"); // backend clears refresh token cookie
@@ -44,9 +42,9 @@ export const AuthProvider = ({ children }) => {
     initAuth();
   }, []);
 
-  // --- Attach Axios interceptors (once, clean up on unmount)
+ 
   useEffect(() => {
-    // Request interceptor: attach access token
+   
     const requestInterceptor = api.interceptors.request.use(
       (config) => {
         if (accessToken) {
@@ -57,7 +55,7 @@ export const AuthProvider = ({ children }) => {
       (error) => Promise.reject(error)
     );
 
-    // Response interceptor: handle 401 errors (refresh token)
+   
     const responseInterceptor = api.interceptors.response.use(
       (response) => response,
       async (error) => {
@@ -69,11 +67,11 @@ export const AuthProvider = ({ children }) => {
             const { data } = await api.get("/refresh");
             updateToken(data.accessToken);
 
-            // Retry the failed request with new token
+            
             originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
             return api(originalRequest);
           } catch (err) {
-            updateToken(null); // refresh failed, user must login
+            updateToken(null); 
             return Promise.reject(err);
           }
         }

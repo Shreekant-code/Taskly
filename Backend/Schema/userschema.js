@@ -18,9 +18,11 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: true, 
+      
       minlength: 8,
     },
+
+     googleId: String,
     photoUrl: {
       type: String, 
       default: null,

@@ -22,29 +22,31 @@ export const LoginPage = () => {
 
   const navigate = useNavigate();
 
+ 
   const handleToggle = () => setRegister(!isRegister);
+
 
   const handleChange = ({ target: { name, value } }) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+ 
   const handleFileChange = (file) => {
     setSelectedFile(file);
     setPhotoPreview(URL.createObjectURL(file));
   };
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const { name, email, password, phone } = formData;
 
     try {
       const url = isRegister
-        ? "https://todo-app-5-inws.onrender.com/registerTodo"
-        : "https://todo-app-5-inws.onrender.com/loginTodo";
+        ? "http://localhost:3000/registerTodo"
+        : "http://localhost:3000/loginTodo";
 
       let dataToSend;
-
       if (isRegister) {
         setUploading(true);
         dataToSend = new FormData();
@@ -52,7 +54,7 @@ export const LoginPage = () => {
         dataToSend.append("email", email);
         dataToSend.append("password", password);
         dataToSend.append("phone", phone);
-        if (selectedFile) dataToSend.append("myfile", selectedFile); // <-- matches your backend field
+        if (selectedFile) dataToSend.append("myfile", selectedFile);
       } else {
         dataToSend = { email, password };
       }
@@ -68,24 +70,34 @@ export const LoginPage = () => {
       );
 
       if (isRegister && data.user?.photoUrl) {
-        setPhotoPreview(data.user.photoUrl); // show uploaded image from backend
+        setPhotoPreview(data.user.photoUrl);
       }
 
       if (!isRegister) {
+      
         setAccessToken(data.accessToken);
         navigate("/todos");
       }
 
+   
       setFormData({ name: "", email: "", password: "", phone: "" });
       setSelectedFile(null);
     } catch (err) {
       const message =
         err.response?.data?.message ||
-        (err.response ? `Server error: ${err.response.status}` : "Network error");
+        (err.response
+          ? `Server error: ${err.response.status}`
+          : "Network error");
       enqueueSnackbar(message, { variant: "error" });
     } finally {
       setUploading(false);
     }
+  };
+
+
+  const handleGoogleLogin = () => {
+  
+    window.open("http://localhost:3000/auth/google", "_self");
   };
 
   return (
@@ -174,17 +186,22 @@ export const LoginPage = () => {
             <input
               type="submit"
               value={isRegister ? "Sign Up" : "Sign In"}
+              disabled={uploading}
               className="block cursor-pointer w-full font-bold text-white bg-gradient-to-r from-[#1089d3] to-[#12b1d1] py-[15px] mt-5 rounded-[20px] shadow-[0_20px_10px_-15px_rgba(133,189,215,0.88)] border-none transition-transform duration-200 ease-in-out hover:scale-[1.03] hover:shadow-[0_23px_10px_-20px_rgba(133,189,215,0.88)] active:scale-95 active:shadow-[0_15px_10px_-10px_rgba(133,189,215,0.88)]"
             />
           </form>
 
+          {/* Google login button */}
           <div className="mt-6">
             <span className="block text-center text-[10px] text-[#aaaaaa]">
               Or {isRegister ? "sign up" : "sign in"} with
             </span>
             <div className="flex justify-center gap-4 mt-2">
-              <button className="bg-gradient-to-r from-black to-gray-600 border-[5px] border-white p-1 rounded-full w-10 aspect-square grid place-content-center shadow-[0_12px_10px_-8px_rgba(133,189,215,0.88)] transition-transform duration-200 hover:scale-110 active:scale-90">
-                <FcGoogle className="text-xl cursor-pointer" />
+              <button
+                onClick={handleGoogleLogin}
+                className="bg-gradient-to-r from-black to-gray-600 border-[5px] border-white p-1 rounded-full w-10 aspect-square grid place-content-center shadow-[0_12px_10px_-8px_rgba(133,189,215,0.88)] transition-transform duration-200 hover:scale-110 active:scale-90"
+              >
+                <FcGoogle className="text-xl" />
               </button>
             </div>
           </div>

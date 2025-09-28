@@ -6,6 +6,7 @@ import { Footer } from "./Components/Footer";
 import { LoginPage } from "./Pages/LoginPage";
 import { Profile } from "./Pages/Profile";
 import { Todo } from "./Pages/Todopage";
+import GoogleCallback from "./Context/Googleaut";
 
 const App = () => {
   return (
@@ -27,6 +28,7 @@ const App = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/profile" element={<Profile />}/>
         <Route path="/todos" element={<Todo />}/>
+             <Route path="/google/callback" element={<GoogleCallback />} />
       </Routes>
     </>
   );

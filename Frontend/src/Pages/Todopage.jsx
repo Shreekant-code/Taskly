@@ -34,14 +34,13 @@ export const Todo = () => {
         setUserPhoto(res.data.photoUrl);
       } catch (err) {
         console.error("Failed to fetch profile photo:", err);
-        setUserPhoto(null); // fallback
+        setUserPhoto(null); 
       }
     };
 
     if (accessToken) fetchProfile();
   }, [accessToken, api]);
 
-  // Fetch todos
   useEffect(() => {
     const fetchTodos = async () => {
       try {
@@ -196,11 +195,11 @@ export const Todo = () => {
           todos.map((todo) => (
             <div
               key={todo._id}
-              className="p-4 border  rounded-[10px] w-full bg-black text-white shadow-sm hover:shadow-md transition-shadow flex flex-col gap-2"
+              className="p-4 border bg-[linear-gradient(135deg,#f5f5dc_0%,#fdfdf5_100%)] rounded-[10px] w-full bg-white text- shadow-sm hover:shadow-md transition-shadow flex flex-col gap-2"
             >
              <p
   className={`font-bold ${
-    istick[todo._id] ? "line-through text-gray-400" : "text-white"
+    istick[todo._id] ? "line-through text-grey-400" : "text-black"
   }`}
 >
   "{todo.description}"
