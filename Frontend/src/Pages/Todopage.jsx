@@ -1,4 +1,4 @@
-// src/components/Todo.jsx
+
 import { useState, useEffect } from "react";
 import { useAuth } from "../Context/Auth";
 import { useSnackbar } from "notistack";
@@ -55,7 +55,7 @@ export const Todo = () => {
     if (accessToken) fetchTodos();
   }, [accessToken, api, enqueueSnackbar]);
 
-  // Create todo
+ 
   const createTodo = async () => {
     if (!description.trim()) return;
     try {
@@ -73,7 +73,7 @@ export const Todo = () => {
     }
   };
 
-  // Toggle tick
+
   const toggletick = (id) => {
     settick((prev) => {
       const updated = { ...prev, [id]: !prev[id] };

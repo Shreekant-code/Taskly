@@ -43,8 +43,8 @@ export const LoginPage = () => {
 
     try {
       const url = isRegister
-        ? "http://localhost:3000/registerTodo"
-        : "http://localhost:3000/loginTodo";
+        ? "https://taskly-s9nt.onrender.com/registerTodo"
+        : "https://taskly-s9nt.onrender.com/loginTodo";
 
       let dataToSend;
       if (isRegister) {

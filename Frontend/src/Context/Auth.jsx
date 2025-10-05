@@ -6,7 +6,7 @@ const AuthContext = createContext();
 
 
 const api = axios.create({
-  baseURL: "http://localhost:3000", 
+  baseURL: "https://taskly-s9nt.onrender.com", 
   withCredentials: true, 
 });
 
