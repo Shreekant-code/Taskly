@@ -15,7 +15,6 @@ export const CreateTodo = async (req, res) => {
     if (!description?.trim()) return res.status(400).json({ message: "Description is required" });
     if (!req.user?.id) return res.status(401).json({ message: "Unauthorized" });
 
-    // 1️⃣ Create the todo
     const newTodo = await Todoschema.create({ description, user: req.user.id });
 
     try {
@@ -28,7 +27,7 @@ export const CreateTodo = async (req, res) => {
 
       const phone = formatIndianNumber(user.phone);
 
-      // 2️⃣ Send SMS (existing functionality)
+    
       const message = `Hello ${user.name}, your new Todo "${description}" was created successfully. Don't forget to complete it on time!`;
       console.log("Sending SMS:", { phone, message });
 
@@ -40,7 +39,7 @@ export const CreateTodo = async (req, res) => {
         console.log("Final Status:", updated.status);
       }
 
-      // 3️⃣ Make AI Voice Call (new)
+  
       const twimlUrl = `${process.env.SERVER_URL}/voice-created?todo=${encodeURIComponent(description)}&name=${encodeURIComponent(user.name)}`;
       const callResult = await makeVoiceCall(phone, twimlUrl);
       console.log("Voice call initiated:", callResult.sid);
@@ -72,7 +71,7 @@ export const Alltodo = async (req, res) => {
   }
 };
 
-// GET TODO BY ID
+
 export const GetTodobyid = async (req, res) => {
   try {
     const { id } = req.params;
@@ -91,7 +90,7 @@ export const GetTodobyid = async (req, res) => {
   }
 };
 
-// UPDATE TODO
+
 export const UpdateTodo = async (req, res) => {
   try {
     const { id } = req.params;
@@ -117,7 +116,7 @@ export const UpdateTodo = async (req, res) => {
   }
 };
 
-// DELETE TODO
+
 export const Deletebyid = async (req, res) => {
   try {
     const { id } = req.params;

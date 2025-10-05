@@ -2,6 +2,7 @@ import User from "../Schema/userschema.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import cloudinary from "cloudinary";
+import fs from "fs";
 
 
 cloudinary.config({
@@ -9,6 +10,8 @@ cloudinary.config({
   api_key: process.env.API_KEY,
   api_secret: process.env.API_SECRET,
 });
+
+
 
 
 export const UserRegister = async (req, res) => {
@@ -29,11 +32,15 @@ export const UserRegister = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-   
     let photoUrl = null;
     if (req.file) {
       const result = await cloudinary.uploader.upload(req.file.path);
       photoUrl = result.secure_url;
+
+      // Remove temporary file from server
+      fs.unlink(req.file.path, (err) => {
+        if (err) console.error("Error deleting temp file:", err);
+      });
     }
 
     const newUser = new User({ name, email, password: hashedPassword, phone, photoUrl });
@@ -46,8 +53,8 @@ export const UserRegister = async (req, res) => {
         name: newUser.name,
         email: newUser.email,
         phone: newUser.phone,
-        photoUrl: newUser.photoUrl
-      }
+        photoUrl: newUser.photoUrl,
+      },
     });
   } catch (error) {
     console.error("Error in UserRegister:", error);
@@ -120,7 +127,7 @@ export const UserLogin = async (req, res) => {
 export const GetUserProfile = async (req, res) => {
   try {
     const userId = req.user.id; 
-    const user = await User.findById(userId).select("-password"); // exclude password
+    const user = await User.findById(userId).select("-password"); 
     if (!user) return res.status(404).json({ message: "User not found" });
 
     res.status(200).json({
