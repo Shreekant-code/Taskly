@@ -97,7 +97,7 @@ export const LoginPage = () => {
 
   const handleGoogleLogin = () => {
   
-    window.open("http://localhost:3000/auth/google", "_self");
+    window.open("https://taskly-s9nt.onrender.com/auth/google", "_self");
   };
 
   return (
@@ -191,7 +191,7 @@ export const LoginPage = () => {
             />
           </form>
 
-          {/* Google login button */}
+         
           <div className="mt-6">
             <span className="block text-center text-[10px] text-[#aaaaaa]">
               Or {isRegister ? "sign up" : "sign in"} with
